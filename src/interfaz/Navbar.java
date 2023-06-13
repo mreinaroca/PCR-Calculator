@@ -23,7 +23,7 @@ public class Navbar extends JPanel implements ActionListener{
 
     private void createPCRButton()
     {
-        lbPCR = SwingConstructor.createStyledJButton("PCR Calculator");
+        lbPCR = SwingConstructor.create_He_JButton("PCR Calculator");
         lbPCR.addActionListener(this);
         lbPCR.setActionCommand(PCR_VIEW);
         this.add(lbPCR);
@@ -31,7 +31,7 @@ public class Navbar extends JPanel implements ActionListener{
 
     private void createSettingsButton()
     {
-        lbSettings= SwingConstructor.createStyledJButton("Settings");
+        lbSettings= SwingConstructor.create_He_JButton("Settings");
         lbSettings.addActionListener(this);
         lbSettings.setActionCommand(SETTINGS_VIEW);
         this.add(lbSettings);
