@@ -1,7 +1,7 @@
 public class InterfazPCR {
     public static void main(String[] args) throws Exception {
 
-        printPCRResults(5, 25, false, "ambiental");
+        printPCRResults(6, 30, false, "lorenz");
 
     }
 
@@ -23,7 +23,7 @@ public class InterfazPCR {
     private static void printPCRArray(double[] singlePCR)
     {   
         System.out.println("Convention:            [T1Water, buffer, MgCl2, dNTP, primerF, primerR, DNA, enhancer, Taq]");
-        System.out.print("Single PCR volumes uL: ");
+        System.out.print("Single PCR volumes (uL): ");
         printArray(singlePCR);
         printPCRSum(singlePCR);
     }
@@ -49,17 +49,17 @@ public class InterfazPCR {
         {
             volumeSum+= singlePCR[i];
         }
-        System.out.print("\nTotal volume: "+volumeSum+ " uL");
+        System.out.print("\nTotal volume: "+volumeSum+ " (uL)");
     }
 
     private static void printPCRMasterMix(double[] masterMix)
     {   
-        System.out.print("\nMaster mix volumes uL: ");
+        System.out.print("\nMaster mix volumes (uL): ");
         printArray(masterMix);
     }
     private static void printDivisionValue(double divisionVolume)
     {
-        System.out.print("\nDivide in volumes of (uL): "+divisionVolume+" uL");
+        System.out.print("\nDivide in volumes before primers of : "+divisionVolume+" uL");
 
     }
 }

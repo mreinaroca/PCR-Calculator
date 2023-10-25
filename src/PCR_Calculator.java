@@ -21,7 +21,7 @@ public class PCR_Calculator {
      * DO NOT CHANGE
     */
     public final static double ambiental_final_buffer_X = 1;
-    public final static double ambiental_final_MgCl2_mM = 3;
+    public final static double ambiental_final_MgCl2_mM = 2.5;
     public final static double ambiental_final_dNTP_mM = 0.2;
     public final static double ambiental_final_primer_mM = 0.3;
     public final static double ambiental_final_crudeDNA = 0.036;
@@ -284,7 +284,8 @@ public class PCR_Calculator {
     {   
         double sum = 0;
         // goes until the last primer i=5
-        for(int i=0;i<9;i++)
+        // or i=3 to before the primers
+        for(int i=0;i<4;i++)
         {
             masterMix[i] = MathTools.roundTwoDecimals(volumes[i]*(numReactions+safeVolumes));
             sum += masterMix[i];
