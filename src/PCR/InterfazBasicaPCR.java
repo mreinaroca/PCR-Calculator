@@ -2,11 +2,11 @@ package PCR;
 public class InterfazBasicaPCR {
     public static void main(String[] args) throws Exception {
 
-        printPCRResults(3, 25, false, "ambiental");
+        printPCRResults(3, 25, false, "ambiental", new boolean[]{true,true,true,true,false,false,false,false,true});
 
     }
 
-    private static void printPCRResults(int numReactions, double reactionVolume, boolean withEnhancer, String protocol)
+    private static void printPCRResults(int numReactions, double reactionVolume, boolean withEnhancer, String protocol, boolean[] master_mix_reagents)
     {
         System.out.print("\n");
         System.out.print("For "+numReactions+" reactions, "+reactionVolume+" uL as final value and");
@@ -14,7 +14,7 @@ public class InterfazBasicaPCR {
         else{System.out.print(" without enhancer:");}
         System.out.print("\n");
         
-        PCR_Calculator c = new PCR_Calculator(numReactions, reactionVolume, withEnhancer,protocol);
+        PCR_Calculator c = new PCR_Calculator(numReactions, reactionVolume, withEnhancer,protocol,master_mix_reagents);
         printPCRArray(c.giveSinglePCRVolumes());
         printPCRMasterMix(c.calculateMasterMixVolumes());
         printDivisionValue(c.giveDivisionVolume());

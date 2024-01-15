@@ -1,4 +1,6 @@
 package PCR;
+
+
 import GeneralTools.MathTools;
 /**
  * This class calculates the volumes of reagents needed for a PCR reaction
@@ -11,6 +13,9 @@ import GeneralTools.MathTools;
 
  
 public class PCR_Calculator {
+    // *********************************************
+    // Constants
+    // *********************************************
 
     public final static String CODE_AMBIENTAL = "ambiental";
     public final static String CODE_LORENZ = "lorenz";
@@ -125,6 +130,10 @@ public class PCR_Calculator {
         nifH_Taq_u
     };
     
+    // *********************************************
+    // Atributes
+    // *********************************************
+
 
 
     private int numReactions;
@@ -135,8 +144,10 @@ public class PCR_Calculator {
     private double[] final_concentrations=new double[8];
     // 0 is water, 1 is buffer, 2 is MgCl2, 3 is dNTP, 4 is primers, 5 is DNA, 6 is enhancer, 7 is Taq
     private double[] volumes;
-    // 0 is water, 1 is buffer, 2 is MgCl2, 3 is dNTP, 4 is primers
-    private double[] masterMix;
+    // 0 is water, 1 is buffer, 2 is MgCl2, 3 is dNTP, 4 is primers, 5 is DNA, 6 is enhancer, 7 is Taq
+    private double[] masterMixVolumes;
+    // master_mix_reagens[4] indicates that the primers are in the master mix
+    private boolean[] master_mix_reagents;
     
      /**
      * Initial Reagents concentrations
@@ -160,33 +171,11 @@ public class PCR_Calculator {
         0, // DNA
         initial_enhancer_X,
         initial_Taq_u
-        };
-    
+        };    
 
-
-
-
-
-
-    /**
-     * Constructor for PCR_Calculator
-     * with no protocol specified, ambiental protocol is used
-     * 
-     * @param numReactions
-     * @param reactionVolume
-     * @param withEnhancer
-     */
-    public PCR_Calculator(int numReactions, Double reactionVolume, boolean withEnhancer)
-    {   
-        volumes = new double[9];
-        masterMix = new double[6];
-        this.numReactions=numReactions;
-        this.reactionVolume=reactionVolume;
-        this.withEnhancer=withEnhancer;
-        assignProtocol(CODE_AMBIENTAL);
-        calculateSinglePCRVolumes();
-    }
-    
+    // *********************************************
+    // Constructor
+    // *********************************************
 
     /**
      * Full constructor for PCR_Calculator
@@ -195,16 +184,21 @@ public class PCR_Calculator {
      * @param withEnhancer
      * @param protocol
      */
-    public PCR_Calculator(int numReactions, double reactionVolume, boolean withEnhancer, String protocol)
+    public PCR_Calculator(int numReactions, double reactionVolume, boolean withEnhancer, String protocol, boolean[] master_mix_reagents)
     {   
         volumes = new double[9];
-        masterMix = new double[9];
-        this.numReactions=numReactions;
-        this.reactionVolume=reactionVolume;
-        this.withEnhancer=withEnhancer;
+        masterMixVolumes = new double[9];
+        this.numReactions = numReactions;
+        this.reactionVolume = reactionVolume;
+        this.withEnhancer = withEnhancer;
+        this.master_mix_reagents = master_mix_reagents;
         assignProtocol(protocol);
         calculateSinglePCRVolumes();
     }
+
+    // *********************************************
+    // Methods
+    // *********************************************
 
     /**
      * Assigns the final concentrations to be used
@@ -234,34 +228,12 @@ public class PCR_Calculator {
                 final_concentrations=ambiental_PCR_concentrations;
                 break;
         }
-        // if(protocol.equals(CODE_AMBIENTAL))
-        // {
-        //     final_concentrations=ambiental_PCR_concentrations;
-        // } else if(protocol.equals(CODE_LORENZ))
-        // {
-        //     final_concentrations=lorenz_PCR_concentrations;
-        // } else if(protocol.equals(CODE_THERMO_FISCHER))
-        // {
-        //     final_concentrations=thermo_fischer_PCR_concentrations;
-        // } 
-        // else if(protocol.equals(CODE_DANIEL))
-        // {
-        //     final_concentrations=daniel_PCR_concentrations;
-        // }
-        // else if(protocol.equals(CODE_NIFH))
-        // {
-        //     final_concentrations=nifH_PCR_concentrations;
-        // }
-        
-        // else {
-        //     System.out.println("Protocol not recognized. Using ambiental protocol");
-        //     final_concentrations=ambiental_PCR_concentrations;
-        // }
+
     }
 
     /**
      * Calculates the volumes of each reagent for a single PCR reaction
-     * @return
+     * @return volumes, an array with the values of a single PCR reaction
      */
     private double[] calculateSinglePCRVolumes()
     {   
@@ -301,7 +273,6 @@ public class PCR_Calculator {
 
     /**
      * Calculates the volumes of each reagent for the master mix
-     * <pre> {@link} calculateSinglePCRVolumes() must be called first </pre>
      * @return
      */
     public double[] calculateMasterMixVolumes()
@@ -309,33 +280,29 @@ public class PCR_Calculator {
         double sum = 0;
         // goes until the last primer i=6
         // or i=3 to before the primers
-        for(int i=0;i<6;i++)
-        {
-            masterMix[i] = MathTools.roundTwoDecimals(volumes[i]*(numReactions+safeVolumes));
-            sum += masterMix[i];
+        for(int i=0;i<9;i++)
+        {   
+            if(master_mix_reagents[i] == true)
+            {
+                masterMixVolumes[i] = MathTools.roundTwoDecimals(volumes[i]*(numReactions+safeVolumes));
+            }
+            
+            sum += masterMixVolumes[i];
         }
         divisionVolume = sum/numReactions;
 
         
-        return masterMix;
+        return masterMixVolumes;
     }
 
 
-    public double[] calculateAfterMasterMixVolumes()
-    {
-        double[] afterMasterMix = new double[3];
-        afterMasterMix[0] = volumes[5];
-        afterMasterMix[1] = volumes[6];
-        afterMasterMix[2] = volumes[7];
-        return afterMasterMix;
-    }
 
 
 
 
     public double[] giveSinglePCRVolumes(){return volumes;}
     
-    public double[] giveMasterMixVolumes(){return masterMix;}
+    public double[] giveMasterMixVolumes(){return masterMixVolumes;}
 
     public double giveDivisionVolume(){return divisionVolume;}
 
