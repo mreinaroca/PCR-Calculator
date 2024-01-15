@@ -1,3 +1,4 @@
+package PCR;
 import GeneralTools.MathTools;
 /**
  * This class calculates the volumes of reagents needed for a PCR reaction
@@ -14,8 +15,8 @@ public class PCR_Calculator {
     public final static String CODE_AMBIENTAL = "ambiental";
     public final static String CODE_LORENZ = "lorenz";
     public final static String CODE_THERMO_FISCHER = "thermo-fischer";
-    public final static Object CODE_DANIEL = "daniel";
-    public final static Object CODE_NIFH = "nifH";
+    public final static String CODE_DANIEL = "daniel";
+    public final static String CODE_NIFH = "nifH";
     /**
      * "Ambiental" protocol
      * DO NOT CHANGE
@@ -23,7 +24,7 @@ public class PCR_Calculator {
     public final static double ambiental_final_buffer_X = 1;
     public final static double ambiental_final_MgCl2_mM = 2.5;
     public final static double ambiental_final_dNTP_mM = 0.2;
-    public final static double ambiental_final_primer_mM = 0.3;
+    public final static double ambiental_final_primer_uM = 0.3;
     public final static double ambiental_final_crudeDNA = 0.036;
     public final static double ambiental_final_enhancer_X = 1;
     public final static double ambiental_final_Taq_u = 0.06;
@@ -33,7 +34,7 @@ public class PCR_Calculator {
         ambiental_final_buffer_X,
         ambiental_final_MgCl2_mM,
         ambiental_final_dNTP_mM,
-        ambiental_final_primer_mM,
+        ambiental_final_primer_uM,
         ambiental_final_crudeDNA,
         ambiental_final_enhancer_X,
         ambiental_final_Taq_u
@@ -48,7 +49,7 @@ public class PCR_Calculator {
     public final static double lorenz_final_buffer_X = 1;
     public final static double lorenz_final_MgCl2_mM = 3;
     public final static double lorenz_final_dNTP_mM = 0.2;
-    public final static double lorenz_final_primer_mM = 0.4;
+    public final static double lorenz_final_primer_uM= 0.4;
     public final static double lorenz_final_crudeDNA = 0.036;
     public final static double lorenz_final_enhancer_X = 1;
     public final static double lorenz_final_Taq_u = 0.05;
@@ -58,7 +59,7 @@ public class PCR_Calculator {
         lorenz_final_buffer_X,
         lorenz_final_MgCl2_mM,
         lorenz_final_dNTP_mM,
-        lorenz_final_primer_mM,
+        lorenz_final_primer_uM,
         lorenz_final_crudeDNA,
         lorenz_final_enhancer_X,
         lorenz_final_Taq_u
@@ -70,7 +71,7 @@ public class PCR_Calculator {
     public final static double thermo_fischer_final_buffer_X = 1;
     public final static double thermo_fischer_final_MgCl2_mM = 2;// between 1 and 4
     public final static double thermo_fischer_final_dNTP_mM = 0.2; 
-    public final static double thermo_fischer_final_primer_mM = 0.1;
+    public final static double thermo_fischer_final_primer_uM = 0.1;
     public final static double thermo_fischer_final_crudeDNA = 0.036;
     public final static double thermo_fischer_final_enhancer_X = 1;
     public final static double thermo_fischer_final_Taq_u = 0.025;
@@ -80,7 +81,7 @@ public class PCR_Calculator {
         thermo_fischer_final_buffer_X,
         thermo_fischer_final_MgCl2_mM,
         thermo_fischer_final_dNTP_mM,
-        thermo_fischer_final_primer_mM,
+        thermo_fischer_final_primer_uM,
         thermo_fischer_final_crudeDNA,
         thermo_fischer_final_enhancer_X,
         thermo_fischer_final_Taq_u
@@ -90,7 +91,7 @@ public class PCR_Calculator {
     public final static double daniel_buffer_X = 1;
     public final static double daniel_MgCl2_mM = 2.5;
     public final static double daniel_dNTP_mM = 0.2;
-    public final static double daniel_primer_mM = 0.4;
+    public final static double daniel_primer_uM = 0.4;
     public final static double daniel_crudeDNA = 0.1;
     public final static double daniel_enhancer_X = 1;
     public final static double daniel_Taq_u = 0.05;
@@ -100,7 +101,7 @@ public class PCR_Calculator {
         daniel_buffer_X,
         daniel_MgCl2_mM,
         daniel_dNTP_mM,
-        daniel_primer_mM,
+        daniel_primer_uM,
         daniel_crudeDNA,
         daniel_enhancer_X,
         daniel_Taq_u
@@ -144,8 +145,8 @@ public class PCR_Calculator {
     private int safeVolumes = 0;
 
     private double initial_buffer_X = 10;
-    private double initial_MgCl2_mM = 25;
-    private double initial_dNTP_mM = 40;
+    private double initial_MgCl2_mM = 50;
+    private double initial_dNTP_mM = 10;
     private double initial_primer_mM = 10;
     private double initial_enhancer_X = 10;
     private double initial_Taq_u = 5;
@@ -210,29 +211,52 @@ public class PCR_Calculator {
      * @param protocol
      */
     private void assignProtocol(String protocol) {
-        if(protocol.equals(CODE_AMBIENTAL))
-        {
-            final_concentrations=ambiental_PCR_concentrations;
-        } else if(protocol.equals(CODE_LORENZ))
-        {
-            final_concentrations=lorenz_PCR_concentrations;
-        } else if(protocol.equals(CODE_THERMO_FISCHER))
-        {
-            final_concentrations=thermo_fischer_PCR_concentrations;
-        } 
-        else if(protocol.equals(CODE_DANIEL))
-        {
-            final_concentrations=daniel_PCR_concentrations;
-        }
-        else if(protocol.equals(CODE_NIFH))
-        {
-            final_concentrations=nifH_PCR_concentrations;
-        }
         
-        else {
-            System.out.println("Protocol not recognized. Using ambiental protocol");
-            final_concentrations=ambiental_PCR_concentrations;
+        switch(protocol)
+        {
+            case CODE_AMBIENTAL:
+                final_concentrations=ambiental_PCR_concentrations;
+                break;
+            case CODE_LORENZ:
+                final_concentrations=lorenz_PCR_concentrations;
+                break; 
+            case CODE_THERMO_FISCHER:   
+                final_concentrations=thermo_fischer_PCR_concentrations;
+                break;
+            case CODE_DANIEL:
+                final_concentrations=daniel_PCR_concentrations;
+                break;
+            case CODE_NIFH:
+                final_concentrations=nifH_PCR_concentrations;
+                break;
+            default:
+                System.out.println("Protocol not recognized. Using ambiental protocol");
+                final_concentrations=ambiental_PCR_concentrations;
+                break;
         }
+        // if(protocol.equals(CODE_AMBIENTAL))
+        // {
+        //     final_concentrations=ambiental_PCR_concentrations;
+        // } else if(protocol.equals(CODE_LORENZ))
+        // {
+        //     final_concentrations=lorenz_PCR_concentrations;
+        // } else if(protocol.equals(CODE_THERMO_FISCHER))
+        // {
+        //     final_concentrations=thermo_fischer_PCR_concentrations;
+        // } 
+        // else if(protocol.equals(CODE_DANIEL))
+        // {
+        //     final_concentrations=daniel_PCR_concentrations;
+        // }
+        // else if(protocol.equals(CODE_NIFH))
+        // {
+        //     final_concentrations=nifH_PCR_concentrations;
+        // }
+        
+        // else {
+        //     System.out.println("Protocol not recognized. Using ambiental protocol");
+        //     final_concentrations=ambiental_PCR_concentrations;
+        // }
     }
 
     /**
@@ -283,9 +307,9 @@ public class PCR_Calculator {
     public double[] calculateMasterMixVolumes()
     {   
         double sum = 0;
-        // goes until the last primer i=5
+        // goes until the last primer i=6
         // or i=3 to before the primers
-        for(int i=0;i<4;i++)
+        for(int i=0;i<6;i++)
         {
             masterMix[i] = MathTools.roundTwoDecimals(volumes[i]*(numReactions+safeVolumes));
             sum += masterMix[i];

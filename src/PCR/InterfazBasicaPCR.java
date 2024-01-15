@@ -1,7 +1,8 @@
-public class InterfazPCR {
+package PCR;
+public class InterfazBasicaPCR {
     public static void main(String[] args) throws Exception {
 
-        printPCRResults(6, 30, false, "lorenz");
+        printPCRResults(3, 25, false, "ambiental");
 
     }
 
