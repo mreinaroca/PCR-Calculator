@@ -40,6 +40,7 @@ public class PCR_Calculator {
         ambiental_final_MgCl2_mM,
         ambiental_final_dNTP_mM,
         ambiental_final_primer_uM,
+        ambiental_final_primer_uM,
         ambiental_final_crudeDNA,
         ambiental_final_enhancer_X,
         ambiental_final_Taq_u
@@ -65,6 +66,7 @@ public class PCR_Calculator {
         lorenz_final_MgCl2_mM,
         lorenz_final_dNTP_mM,
         lorenz_final_primer_uM,
+        lorenz_final_primer_uM,
         lorenz_final_crudeDNA,
         lorenz_final_enhancer_X,
         lorenz_final_Taq_u
@@ -87,6 +89,7 @@ public class PCR_Calculator {
         thermo_fischer_final_MgCl2_mM,
         thermo_fischer_final_dNTP_mM,
         thermo_fischer_final_primer_uM,
+        thermo_fischer_final_primer_uM,
         thermo_fischer_final_crudeDNA,
         thermo_fischer_final_enhancer_X,
         thermo_fischer_final_Taq_u
@@ -107,6 +110,7 @@ public class PCR_Calculator {
         daniel_MgCl2_mM,
         daniel_dNTP_mM,
         daniel_primer_uM,
+        daniel_primer_uM,
         daniel_crudeDNA,
         daniel_enhancer_X,
         daniel_Taq_u
@@ -124,6 +128,7 @@ public class PCR_Calculator {
         nifH_buffer_X,
         nifH_MgCl2_mM,
         nifH_dNTP_mM,
+        nifH_primer_mM,
         nifH_primer_mM,
         nifH_crudeDNA,
         nifH_enhancer_X,
@@ -158,7 +163,8 @@ public class PCR_Calculator {
     private double initial_buffer_X = 10;
     private double initial_MgCl2_mM = 50;
     private double initial_dNTP_mM = 10;
-    private double initial_primer_mM = 10;
+    private double initial_primerF_mM = 10;
+    private double initial_primerR_mM = 10;
     private double initial_enhancer_X = 10;
     private double initial_Taq_u = 5;
     private double[] initial_concentrations= 
@@ -167,7 +173,8 @@ public class PCR_Calculator {
         initial_buffer_X,
         initial_MgCl2_mM,
         initial_dNTP_mM,
-        initial_primer_mM,
+        initial_primerF_mM,
+        initial_primerR_mM,
         0, // DNA
         initial_enhancer_X,
         initial_Taq_u
@@ -184,16 +191,16 @@ public class PCR_Calculator {
      * @param withEnhancer
      * @param protocol
      */
-    public PCR_Calculator(int numReactions, double reactionVolume, boolean withEnhancer, String protocol, boolean[] master_mix_reagents)
+    public PCR_Calculator(int numReactions, double reactionVolume, String protocol, boolean[] master_mix_reagents)
     {   
         volumes = new double[9];
         masterMixVolumes = new double[9];
         this.numReactions = numReactions;
         this.reactionVolume = reactionVolume;
-        this.withEnhancer = withEnhancer;
         this.master_mix_reagents = master_mix_reagents;
         assignProtocol(protocol);
         calculateSinglePCRVolumes();
+        calculateMasterMixVolumes();
     }
 
     // *********************************************
@@ -243,21 +250,22 @@ public class PCR_Calculator {
         volumes[2]=volMg;
         double voldNTP = final_concentrations[3]*reactionVolume/initial_concentrations[3];
         volumes[3]=voldNTP;
-        double volPrimers = final_concentrations[4]*reactionVolume/initial_concentrations[4];
-        volumes[4]=volPrimers;
-        volumes[5]=volPrimers;
+        double volPrimerF = final_concentrations[4]*reactionVolume/initial_concentrations[4];
+        volumes[4]=volPrimerF;
+        double volPrimerR = final_concentrations[5]*reactionVolume/initial_concentrations[5];
+        volumes[5]=volPrimerR;
         // 
-        double volDNA = final_concentrations[5]*reactionVolume;
+        double volDNA = final_concentrations[6]*reactionVolume;
         volumes[6]=volDNA;
 
-        if(withEnhancer)
+        if(master_mix_reagents[7] == true) //with enhancer or not?
         {
-            double volEnhancer = final_concentrations[6]*reactionVolume/initial_concentrations[6];
+            double volEnhancer = final_concentrations[7]*reactionVolume/initial_concentrations[7];
             volumes[7]=volEnhancer;
         } 
         else {volumes[7]=0;}
 
-        double volTaq = final_concentrations[7]*reactionVolume/initial_concentrations[7];
+        double volTaq = final_concentrations[8]*reactionVolume/initial_concentrations[8];
         volumes[8]=volTaq;
 
         double volWaterTypeI = reactionVolume;
@@ -305,6 +313,10 @@ public class PCR_Calculator {
     public double[] giveMasterMixVolumes(){return masterMixVolumes;}
 
     public double giveDivisionVolume(){return divisionVolume;}
+
+    public double[] giveFinalConcentrations(){return final_concentrations;}
+    
+    public double[] giveInitialConcentrations(){return initial_concentrations;}
 
 
 
