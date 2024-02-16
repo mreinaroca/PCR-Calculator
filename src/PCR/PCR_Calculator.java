@@ -154,11 +154,8 @@ public class PCR_Calculator {
     // master_mix_reagens[4] indicates that the primers are in the master mix
     private boolean[] master_mix_reagents;
     
-     /**
-     * Initial Reagents concentrations
-     * CHANGE AS NEEDED
-     */
-    private int safeVolumes = 0;
+
+    private double safeVolume;
 
     private double initial_buffer_X = 10;
     private double initial_MgCl2_mM = 50;
@@ -191,13 +188,14 @@ public class PCR_Calculator {
      * @param withEnhancer
      * @param protocol
      */
-    public PCR_Calculator(int numReactions, double reactionVolume, String protocol, boolean[] master_mix_reagents)
+    public PCR_Calculator(int numReactions, double reactionVolume, String protocol, double safeVolume, boolean[] master_mix_reagents)
     {   
         volumes = new double[9];
         masterMixVolumes = new double[9];
         this.numReactions = numReactions;
         this.reactionVolume = reactionVolume;
         this.master_mix_reagents = master_mix_reagents;
+        this.safeVolume = safeVolume;
         assignProtocol(protocol);
         calculateSinglePCRVolumes();
         calculateMasterMixVolumes();
@@ -292,7 +290,7 @@ public class PCR_Calculator {
         {   
             if(master_mix_reagents[i] == true)
             {
-                masterMixVolumes[i] = MathTools.roundTwoDecimals(volumes[i]*(numReactions+safeVolumes));
+                masterMixVolumes[i] = MathTools.roundTwoDecimals(volumes[i]*numReactions*(1+safeVolume/100));
             }
             
             sum += masterMixVolumes[i];

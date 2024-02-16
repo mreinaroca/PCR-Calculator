@@ -1,12 +1,13 @@
 package PCR;
 import GeneralTools.ConsoleTable;
-public class InterfazBasicaPCR {
+public class PCR_Interface {
     public static void main(String[] args) throws Exception {
         
         printPCRResults(
-            3, 
-            25, 
+            5, 
+            30, 
             "ambiental", 
+            10, //Percentage of extra volume 10 = 10%, 100 = 100% = 2 times.
             new boolean[]
             {
                 true, //T1Water
@@ -22,11 +23,11 @@ public class InterfazBasicaPCR {
 
     }
 
-    private static void printPCRResults(int numReactions, double reactionVolume, String protocol, boolean[] master_mix_reagents)
+    private static void printPCRResults(int numReactions, double reactionVolume, String protocol, double safeVolume, boolean[] master_mix_reagents)
     {
         //printPCRHeading(numReactions, reactionVolume, withEnhancer);
         
-        PCR_Calculator pcr_calculator = new PCR_Calculator(numReactions, reactionVolume, protocol,master_mix_reagents);
+        PCR_Calculator pcr_calculator = new PCR_Calculator(numReactions, reactionVolume, protocol, safeVolume, master_mix_reagents);
         printPCRTable(pcr_calculator);
         //printPCRArray(pcr_calculator.giveSinglePCRVolumes());
         //printPCRMasterMix(pcr_calculator.calculateMasterMixVolumes());
