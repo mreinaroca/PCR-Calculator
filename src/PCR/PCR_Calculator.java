@@ -291,11 +291,12 @@ public class PCR_Calculator {
             if(master_mix_reagents[i] == true)
             {
                 masterMixVolumes[i] = MathTools.roundTwoDecimals(volumes[i]*numReactions*(1+safeVolume/100));
+                sum += volumes[i];
             }
             
-            sum += masterMixVolumes[i];
+            
         }
-        divisionVolume = sum/numReactions;
+        divisionVolume = MathTools.roundTwoDecimals(sum);
 
         
         return masterMixVolumes;

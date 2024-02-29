@@ -5,17 +5,17 @@ public class PCR_Interface {
         
         printPCRResults(
             5, 
-            30, 
+            25, 
             "ambiental", 
-            10, //Percentage of extra volume 10 = 10%, 100 = 100% = 2 times.
+            5, //Percentage of extra volume 10 = 10%, 100 = 100% = 2 times.
             new boolean[]
             {
                 true, //T1Water
                 true, //buffer
                 true, //MgCl2
                 true, //dNTP
-                true, //primerF
-                true, //primerR
+                false, //primerF
+                false, //primerR
                 false, //DNA 
                 false, //enhancer
                 true  //Taq
